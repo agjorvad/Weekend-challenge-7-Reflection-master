@@ -7,9 +7,20 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 
+
+//reducer for Feeling component
+
+const Feeling = (state = {}, action) => {
+    if(action.type === 'ADD_FEELING') {
+        console.log('Feeling', action);
+        return action.payload;
+    }
+return state;
+}
 const storeInstance = createStore(
-    combineReducers({
-    }),
+    // combineReducers({
+    // }),
+    Feeling,
     applyMiddleware(logger),
 )
 
