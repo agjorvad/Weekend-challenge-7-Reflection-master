@@ -9,6 +9,31 @@ import TableRow from '@material-ui/core/TableRow';
 
 
 class Admin extends Component {
+    constructor() {
+        super();
+        this.state = {
+            feedbackList: [],
+        }
+    }
+
+    getFeedback = () => {
+        axios.get('/api/feedback')
+        .then(response => {
+            this.setState({
+                feedbackList: response.data
+            });
+            console.log(response.data);
+        })
+        .catch(error => {
+            alert('error');
+            console.log(`error on get', ${error}`);
+        });
+    }
+
+    componentDidMount = () => {
+        this.getFeedback();
+    }
+
   render() {
     return (
       <div className="Admin">
@@ -23,8 +48,22 @@ class Admin extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                                < TableRow>
+                        {this.state.feedbackList.map((feedback, i) => 
+                                < TableRow key ={i}>
+                                <TableCell>
+                                    {feedback.Feeling}
+                                    </TableCell>
+                                    <TableCell>
+                                    {feedback.Comprehension}
+                                    </TableCell>
+                                    <TableCell>
+                                    {feedback.Support}
+                                    </TableCell>
+                                    <TableCell>
+                                    {feedback.Comments}
+                                    </TableCell>
                                 </TableRow>
+                                )}
                     </TableBody>
                 </Table>
       </div>
