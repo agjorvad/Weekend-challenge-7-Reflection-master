@@ -17,10 +17,39 @@ const Feeling = (state = {}, action) => {
     }
 return state;
 }
+
+const Content = (state = {}, action) => {
+    if(action.type === 'ADD_CONTENT') {
+        console.log('Content', action);
+        return action.payload;
+    }
+return state;
+}
+
+const Support = (state = {}, action) => {
+    if(action.type === 'ADD_SUPPORT') {
+        console.log('Support', action);
+        return action.payload;
+    }
+return state;
+}
+
+const Comments = (state = {}, action) => {
+    if(action.type === 'ADD_COMMENTS') {
+        console.log('Comments', action);
+        return action.payload;
+    }
+return state;
+}
+
 const storeInstance = createStore(
-    // combineReducers({
-    // }),
+    combineReducers({
+
     Feeling,
+    Content,
+    Support,
+    Comments,
+}),
     applyMiddleware(logger),
 )
 

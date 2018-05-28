@@ -28,15 +28,7 @@ class Feeling extends Component {
         console.log('submit worked!');
         this.props.dispatch({ type: 'ADD_FEELING', payload: this.state.feeling });
     }
-    // handleCity = (event) => {
-    //   console.log(event.target.value);
-    //   this.setState({ 
-    //     user: {
-    //       ...this.state.user, 
-    //     city: event.target.value,
-    //   }
-    //   });
-    // };
+
     render() {
         return (
             <div className="Feeling">
