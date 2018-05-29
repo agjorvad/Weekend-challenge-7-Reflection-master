@@ -1,46 +1,61 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import './Feeling.css';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Input from '@material-ui/core/Input';
 
+const mapReduxStateToProps = (reduxState) => (
+    { reduxState }
+);
+
+const emptyInput = '';
 
 class Feeling extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
-            feeling: '',
+            feedback: emptyInput,
         }
     }
 
+    componentDidMount = () => {
+        this.setState({
+            feedback: this.props.reduxState.feedbackForm.feeling,
+        })
+    }
+
+    //assign input value to state property
     handleChangeFeeling = (event) => {
         console.log('input was changed');
         console.log(event.target);
         console.log(event.target.value);
         this.setState({
-            feeling: event.target.value
+            feedback: event.target.value
         })
     }
 
+    // Send state to store and move to next page
     handleFeelingSubmit = (event) => {
         event.preventDefault();
         console.log('submit worked!');
-        this.props.dispatch({ type: 'ADD_FEELING', payload: this.state.feeling });
+        this.props.dispatch({ type: 'ADD_FEEDBACK', property: 'feeling', payload: this.state.feedback });
+        this.props.history.push('/2');
     }
 
     render() {
         return (
             <div className="Feeling">
+                <h2>1 of 4 pages</h2>
+                <h3>How are you feeling today?</h3>
                 <form onSubmit={this.handleFeelingSubmit}>
-                    <input onChange={this.handleChangeFeeling} value={this.state.feeling} placeholder={'feeling'}/>
-                    <input type="submit" className="submit-button" value="NEXT" />
-                    <Link to="/2">Next</Link>
-                    </form>
-      </div>
-                );
-              }
-            }
-            
-            
-export default connect()(Feeling);
+                    <input onChange={this.handleChangeFeeling} type="number" min="1" max="5" required />
+                    <input type="submit" className="submit-button" value="Next" />
+                    {/* <Link to="/2">Next</Link> */}
+                </form>
+            </div>
+        );
+    }
+}
+
+
+export default connect(mapReduxStateToProps)(Feeling);

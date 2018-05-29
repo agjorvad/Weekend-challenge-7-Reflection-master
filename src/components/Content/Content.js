@@ -1,45 +1,54 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import './Content.css';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
+const mapReduxStateToProps = (reduxState) => (
+    { reduxState }
+);
 
 class Content extends Component {
     constructor() {
         super();
 
         this.state = {
-            content: '',
+            feedback: '',
         }
     }
 
-    handleChangeContent = (event) => {
-        console.log('input was changed');
-        console.log(event.target);
-        console.log(event.target.value);
+    componentDidMount = () => {
         this.setState({
-            content: event.target.value
+            feedback: this.props.reduxState.feedbackForm.content,
         })
     }
-
+    //assign input value to state property
+    handleChangeContent = (event) => {
+        console.log('input was changed');
+        console.log(event.target.value);
+        this.setState({
+            feedback: event.target.value
+        })
+    }
+    // Send state to store and move to next page
     handleContentSubmit = (event) => {
         event.preventDefault();
         console.log('submit worked!');
-        this.props.dispatch({ type: 'ADD_CONTENT', payload: this.state.content });
+        this.props.dispatch({ type: 'ADD_FEEDBACK', property: 'content', payload: this.state.feedback });
+        this.props.history.push('/3');
     }
 
-  render() {
-    return (
-      <div className="Content">
-               <form onSubmit={this.handleContentSubmit}>
-                    <input onChange={this.handleChangeContent} value={this.state.content} placeholder="Content"/>
+    render() {
+        return (
+            <div className="Content">
+                <h2>2 of 4 pages</h2>
+                <h3>How well are you understanding the content?</h3>
+                <form onSubmit={this.handleContentSubmit}>
+                    <input onChange={this.handleChangeContent} placeholder="Content" type="number" min="1" max="5" required />
                     <input type="submit" className="submit-button" value="NEXT" />
-                    <Link to="/3">Next</Link>
-                    </form>
-      </div>
-    );
-  }
+                    {/* <Link to="/3">Next</Link> */}
+                </form>
+            </div>
+        );
+    }
 }
 
-export default connect()(Content);
+export default connect(mapReduxStateToProps)(Content);

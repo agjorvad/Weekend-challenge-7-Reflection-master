@@ -38,13 +38,4 @@ if (process.env.DATABASE_URL) {
     };
 }
 
-// pool.on('connect', (client) => {
-//     console.log('posgresql connected!');
-// });
-
-// pool.on('error', (err, client) => {
-//     console.log('Unexpected Error connecting to Postgresql', err);
-//     process.exit(-1);
-// });
-
 module.exports = new pg.Pool(config);

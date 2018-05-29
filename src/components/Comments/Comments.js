@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import './Comments.css';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
 
 const mapReduxStateToProps = (reduxState) => (
     { reduxState }
@@ -13,57 +13,55 @@ class Comments extends Component {
         super(props);
 
         this.state = {
-            comments: '',
+            feedback: '',
         }
     }
 
+    componentDidMount = () => {
+        this.setState({
+            feedback: this.props.reduxState.feedbackForm.comments,
+        })
+    }
+    //assign input value to state property
     handleChangeComments = (event) => {
         console.log('input was changed');
         console.log(event.target);
         console.log(event.target.value);
         this.setState({
-            comments: event.target.value
+            feedback: event.target.value
         })
     }
-
+    // Send state to store
     handleCommentsSubmit = (event) => {
-        event.preventDefault();
         console.log('submit worked!');
-        this.props.dispatch({ type: 'ADD_COMMENTS', payload: this.state.comments });
+        this.props.dispatch({ type: 'ADD_FEEDBACK', property: 'comments', payload: this.state.feedback });
+    }
+    // Run post request in store
+    submitFeedback = () => {
+        this.props.dispatch({ type: 'SUBMIT_FEEDBACK' });
+    }
+    // Send page state to store and run post request, then move to next page
+    submitAllToStore = (event) => {
+        event.preventDefault();
+        this.handleCommentsSubmit();
+        this.submitFeedback();
+        this.props.history.push('/5');
     }
 
-    // formatCheckoutObject = () => {
-    //     const redux = this.props.reduxState;
-    //     this.setState({
-    //         feedback:
-    //         {
-    //             feeling: redux.feeling
-    //         }
-    //     })
-    // }
-
-    postFeedback = () => {
-        axios.post('/api/feedback', this.props.reduxState)
-            .then((response) => {
-                console.log('success', this.props.reduxState);
-            })
-            .catch((error) => {
-                alert('There was a problem');
-            })
+    render() {
+        return (
+            <div className="Comments">
+                <h2>4 of 4 pages</h2>
+                <h3>Any comments you want to leave?</h3>
+                <form onSubmit={this.submitAllToStore}>
+                    <Input onChange={this.handleChangeComments} placeholder="Comments" type="text" required />
+                    <Button onClick={this.submitAllToStore} variant="raised" color="primary">
+                        Submit
+                    </Button>
+                </form>
+            </div>
+        );
     }
-
-  render() {
-    return (
-      <div className="Comments">
-<form onSubmit={this.handleCommentsSubmit}>
-                    <input onChange={this.handleChangeComments} value={this.state.comments} placeholder="Comments"/>
-                    <input type="submit" className="submit-button" value="NEXT" />
-<Link to="/5">Submit</Link>
-</form>
-<button onClick={this.postFeedback}>Send</button>
-      </div>
-    );
-  }
 }
 
 export default connect(mapReduxStateToProps)(Comments);

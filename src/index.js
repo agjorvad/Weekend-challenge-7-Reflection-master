@@ -3,53 +3,43 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App/App';
 import registerServiceWorker from './registerServiceWorker';
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
+import axios from 'axios';
 
 
-//reducer for Feeling component
+//reducer for form components
 
-const Feeling = (state = {}, action) => {
-    if(action.type === 'ADD_FEELING') {
-        console.log('Feeling', action);
-        return action.payload;
+const feedbackForm = (state = {}, action) => {
+    // Action for first 3 pages
+    if (action.type === "ADD_FEEDBACK") {
+        state = {
+            ...state,
+            [action.property]: action.payload,
+        }
+    // Action for submit page
+    } else if (action.type === "SUBMIT_FEEDBACK") {
+        postFeedback(state);
     }
-return state;
+    return state;
+}
+// Post feedback to database
+const postFeedback = (feedback) => {
+    axios.post('/api/feedback', feedback)
+        .then((response) => {
+            console.log('success', feedback);
+        })
+        .catch((error) => {
+            alert('There was a problem');
+        })
 }
 
-const Content = (state = {}, action) => {
-    if(action.type === 'ADD_CONTENT') {
-        console.log('Content', action);
-        return action.payload;
-    }
-return state;
-}
-
-const Support = (state = {}, action) => {
-    if(action.type === 'ADD_SUPPORT') {
-        console.log('Support', action);
-        return action.payload;
-    }
-return state;
-}
-
-const Comments = (state = {}, action) => {
-    if(action.type === 'ADD_COMMENTS') {
-        console.log('Comments', action);
-        return action.payload;
-    }
-return state;
-}
-
+// Create store
 const storeInstance = createStore(
     combineReducers({
-
-    Feeling,
-    Content,
-    Support,
-    Comments,
-}),
+        feedbackForm
+    }),
     applyMiddleware(logger),
 )
 
